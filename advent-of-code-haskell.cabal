@@ -16,8 +16,10 @@ common shared-properties
 library
   import: shared-properties
   exposed-modules: AoC.Template
+                 , Day02
+                 , Day01
   hs-source-dirs: src
-  build-depends: base ^>=4.17.0.0
+  build-depends: base ^>=4.21.0.0
                , text
                , containers
                , vector
@@ -28,7 +30,7 @@ executable advent-of-code
   import: shared-properties
   main-is: Main.hs
   hs-source-dirs: app
-  build-depends: base ^>=4.17.0.0
+  build-depends: base ^>=4.21.0.0
                , advent-of-code-haskell
                , text
                , time
@@ -38,7 +40,23 @@ test-suite advent-of-code-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   hs-source-dirs: test
-  build-depends: base ^>=4.17.0.0
+  build-depends: base ^>=4.21.0.0
                , advent-of-code-haskell
                , hspec
+               , text
+
+executable day01
+  import: shared-properties
+  main-is: Main01.hs
+  hs-source-dirs: app
+  build-depends: base ^>=4.21.0.0
+               , advent-of-code-haskell
+               , text
+
+executable day02
+  import: shared-properties
+  main-is: Main02.hs
+  hs-source-dirs: app
+  build-depends: base ^>=4.21.0.0
+               , advent-of-code-haskell
                , text

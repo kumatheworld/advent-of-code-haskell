@@ -1,12 +1,10 @@
-module Main where
+module Main (main) where
 
-import AoC.Template (Day(..))
 import Data.Time (getCurrentTime, diffUTCTime)
 import Text.Printf (printf)
 
 -- Import day modules here as they are created
 -- import qualified Day01
--- import qualified Day02
 
 main :: IO ()
 main = do
@@ -16,8 +14,7 @@ main = do
   start <- getCurrentTime
   
   -- Run solutions here as they are created
-  -- runDay 1 Day01.solve
-  -- runDay 2 Day02.solve
+  -- runDay 1 Day01.main
   
   end <- getCurrentTime
   let elapsed = diffUTCTime end start

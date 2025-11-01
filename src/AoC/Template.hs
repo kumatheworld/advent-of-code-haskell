@@ -18,7 +18,7 @@ readInput (Day n) = TIO.readFile $ printf "data/inputs/%02d.txt" n
 readExample :: Day -> IO T.Text
 readExample (Day n) = TIO.readFile $ printf "data/examples/%02d.txt" n
 
-solve :: Day -> (T.Text -> Maybe a) -> (T.Text -> Maybe a) -> IO ()
+solve :: Show a => Day -> (T.Text -> Maybe a) -> (T.Text -> Maybe a) -> IO ()
 solve day part1 part2 = do
   input <- readInput day
   putStrLn $ "Part 1: " ++ show (part1 input)
