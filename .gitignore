@@ -1,0 +1,28 @@
+# Haskell
+dist/
+dist-newstyle/
+.stack-work/
+*.hi
+*.o
+*.prof
+*.aux
+*.hp
+*.eventlog
+.HTF/
+.ghc.environment.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Advent of Code
+data/inputs/*.txt
+!data/inputs/.gitkeep
+session.cookie

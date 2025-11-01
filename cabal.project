@@ -1,0 +1,4 @@
+packages: .
+
+package advent-of-code-haskell
+  ghc-options: -O2

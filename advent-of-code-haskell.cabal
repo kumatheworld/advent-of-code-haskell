@@ -1,0 +1,44 @@
+cabal-version: 3.0
+name: advent-of-code-haskell
+version: 0.1.0.0
+synopsis: Advent of Code solutions in Haskell
+description: Solutions for Advent of Code puzzles implemented in Haskell
+license: MIT
+author: <name>
+maintainer: <email>
+category: Game
+build-type: Simple
+
+common shared-properties
+  default-language: Haskell2010
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+
+library
+  import: shared-properties
+  exposed-modules: AoC.Template
+  hs-source-dirs: src
+  build-depends: base ^>=4.17.0.0
+               , text
+               , containers
+               , vector
+               , bytestring
+               , time
+
+executable advent-of-code
+  import: shared-properties
+  main-is: Main.hs
+  hs-source-dirs: app
+  build-depends: base ^>=4.17.0.0
+               , advent-of-code-haskell
+               , text
+               , time
+
+test-suite advent-of-code-test
+  import: shared-properties
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs: test
+  build-depends: base ^>=4.17.0.0
+               , advent-of-code-haskell
+               , hspec
+               , text
