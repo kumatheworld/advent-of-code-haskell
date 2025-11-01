@@ -1,8 +1,7 @@
 import Test.Hspec
 
 -- Import day test modules here as they are created
--- import qualified Day01Spec
--- import qualified Day02Spec
+import qualified Day01Spec
 
 main :: IO ()
 main = hspec $ do
@@ -11,5 +10,4 @@ main = hspec $ do
       True `shouldBe` True
     
     -- Add day test suites here as they are created
-    -- Day01Spec.spec
-    -- Day02Spec.spec
+    Day01Spec.spec
