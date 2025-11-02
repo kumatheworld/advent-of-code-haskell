@@ -1,0 +1,16 @@
+{
+    "name": "haskell-devcontainer",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/devcontainers/features/ghcup:1": {}
+    },
+    "postCreateCommand": "ghc --version && cabal --version",
+    "remoteUser": "vscode",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "haskell.haskell"
+            ]
+        }
+    }
+}
