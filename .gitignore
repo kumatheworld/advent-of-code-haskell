@@ -23,6 +23,4 @@ dist-newstyle/
 Thumbs.db
 
 # Advent of Code
-data/inputs/*.txt
-!data/inputs/.gitkeep
 session.cookie
