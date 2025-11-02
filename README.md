@@ -3,6 +3,8 @@
 Solutions for [Advent of Code](https://adventofcode.com/) in [Haskell](https://www.haskell.org/).
 
 > **Note**: This template is inspired by and adapted from [fspoettel/advent-of-code-rust](https://github.com/fspoettel/advent-of-code-rust). Many thanks to Felix Spoettel for the excellent original Rust template!
+> 
+> Haskell adaptation created with assistance from Amazon Q Developer.
 
 <!--- advent_readme_stars table --->\n\n<!--- benchmarking table --->\n\n---
 
