@@ -4,8 +4,8 @@ version: 0.1.0.0
 synopsis: Advent of Code solutions in Haskell
 description: Solutions for Advent of Code puzzles implemented in Haskell
 license: MIT
-author: <name>
-maintainer: <email>
+author: Yoshihiro Kumazawa
+maintainer: kum4th3w0rld@gmail.com
 category: Game
 build-type: Simple
 
