@@ -25,7 +25,6 @@ scaffoldDay day = do
   createModuleFile moduleFile dayModule day
   createEmptyFile exampleFile
   updateCabalFile dayModule
-  updateDayRunner dayModule day
   
   putStrLn "\nDownloading input..."
   callCommand $ printf "cabal run download %d" day
@@ -80,38 +79,6 @@ createEmptyFile path = do
     else do
       writeFile path ""
       putStrLn $ "Created empty file \"" ++ path ++ "\""
-
-updateDayRunner :: String -> Int -> IO ()
-updateDayRunner moduleName day = do
-  dayContent <- TIO.readFile "app/Day.hs"
-  let hasImport = T.isInfixOf (T.pack $ "import qualified " ++ moduleName) dayContent
-      hasCase = T.isInfixOf (T.pack $ "runDay " ++ show day) dayContent
-  
-  if hasImport && hasCase
-    then putStrLn "Day runner already up to date"
-    else do
-      let updatedContent = if not hasImport
-            then addDayImport dayContent moduleName
-            else dayContent
-          finalContent = if not hasCase
-            then addDayCase updatedContent moduleName day
-            else updatedContent
-      TIO.writeFile "app/Day.hs" finalContent
-      putStrLn $ "Added " ++ moduleName ++ " to day runner"
-
-addDayImport :: T.Text -> String -> T.Text
-addDayImport content moduleName =
-  T.replace
-    (T.pack "import Text.Printf (printf)")
-    (T.pack $ "import Text.Printf (printf)\nimport qualified " ++ moduleName)
-    content
-
-addDayCase :: T.Text -> String -> Int -> T.Text
-addDayCase content moduleName day =
-  T.replace
-    (T.pack $ "runDay n = die")
-    (T.pack $ "runDay " ++ show day ++ " = " ++ moduleName ++ ".solution\nrunDay n = die")
-    content
 
 updateCabalFile :: String -> IO ()
 updateCabalFile moduleName = do
