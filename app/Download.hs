@@ -8,15 +8,18 @@ import System.Exit (die)
 import Text.Printf (printf)
 import Control.Exception (catch, SomeException)
 
+year :: Int
+year = 2025
+
 main :: IO ()
 main = do
   args <- getArgs
   case args of
-    [dayStr, year] -> downloadInput (read dayStr) (read year)
-    _ -> die "Usage: cabal run download <day> <year>"
+    [dayStr] -> downloadInput (read dayStr)
+    _ -> die "Usage: cabal run download <day>"
 
-downloadInput :: Int -> Int -> IO ()
-downloadInput day year = do
+downloadInput :: Int -> IO ()
+downloadInput day = do
   sessionCookie <- BS.readFile "session.cookie"
   let url = printf "https://adventofcode.com/%d/day/%d/input" year day
       outputFile = printf "data/inputs/%02d.txt" day
