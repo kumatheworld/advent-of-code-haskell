@@ -23,6 +23,7 @@ library
                , vector
                , bytestring
                , time
+               , process
 
 executable advent-of-code
   import: shared-properties
