@@ -2,6 +2,7 @@ module Main (main) where
 
 import Network.HTTP.Simple
 import qualified Data.ByteString.Char8 as BS
+import qualified Data.CaseInsensitive as CI
 import System.Environment (getArgs)
 import System.Exit (die)
 import Text.Printf (printf)
@@ -21,7 +22,7 @@ downloadInput day year = do
       outputFile = printf "data/inputs/%02d.txt" day
   
   request <- parseRequest url
-  let request' = setRequestHeader (BS.pack "Cookie") [BS.pack "session=" <> BS.strip sessionCookie] request
+  let request' = setRequestHeader (CI.mk $ BS.pack "Cookie") [BS.pack "session=" <> BS.strip sessionCookie] request
   
   catch (do
     response <- httpBS request'
