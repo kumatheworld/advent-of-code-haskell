@@ -20,13 +20,12 @@ scaffoldDay day = do
   let dayPadded = printf "%02d" day :: String
       dayModule = "Day" ++ dayPadded
       moduleFile = "src/" ++ dayModule ++ ".hs"
-      mainFile = "app/Main" ++ dayPadded ++ ".hs"
       exampleFile = "data/examples/" ++ dayPadded ++ ".txt"
   
   createModuleFile moduleFile dayModule day
-  createMainFile mainFile dayModule
   createEmptyFile exampleFile
-  updateCabalFile dayModule dayPadded
+  updateCabalFile dayModule
+  updateDayRunner dayModule day
   
   putStrLn "\nDownloading input..."
   callCommand $ printf "cabal run download %d" day
@@ -73,23 +72,6 @@ createModuleFile path moduleName day = do
       TIO.writeFile path content
       putStrLn $ "Created module file \"" ++ path ++ "\""
 
-createMainFile :: FilePath -> String -> IO ()
-createMainFile path moduleName = do
-  exists <- doesFileExist path
-  if exists
-    then putStrLn $ "Main file \"" ++ path ++ "\" already exists"
-    else do
-      let content = T.pack $ unlines
-            [ "module Main (main) where"
-            , ""
-            , "import qualified " ++ moduleName
-            , ""
-            , "main :: IO ()"
-            , "main = " ++ moduleName ++ ".solution"
-            ]
-      TIO.writeFile path content
-      putStrLn $ "Created main file \"" ++ path ++ "\""
-
 createEmptyFile :: FilePath -> IO ()
 createEmptyFile path = do
   exists <- doesFileExist path
@@ -99,25 +81,50 @@ createEmptyFile path = do
       writeFile path ""
       putStrLn $ "Created empty file \"" ++ path ++ "\""
 
-updateCabalFile :: String -> String -> IO ()
-updateCabalFile moduleName dayPadded = do
+updateDayRunner :: String -> Int -> IO ()
+updateDayRunner moduleName day = do
+  dayContent <- TIO.readFile "app/Day.hs"
+  let hasImport = T.isInfixOf (T.pack $ "import qualified " ++ moduleName) dayContent
+      hasCase = T.isInfixOf (T.pack $ "runDay " ++ show day) dayContent
+  
+  if hasImport && hasCase
+    then putStrLn "Day runner already up to date"
+    else do
+      let updatedContent = if not hasImport
+            then addDayImport dayContent moduleName
+            else dayContent
+          finalContent = if not hasCase
+            then addDayCase updatedContent moduleName day
+            else updatedContent
+      TIO.writeFile "app/Day.hs" finalContent
+      putStrLn $ "Added " ++ moduleName ++ " to day runner"
+
+addDayImport :: T.Text -> String -> T.Text
+addDayImport content moduleName =
+  T.replace
+    (T.pack "import Text.Printf (printf)")
+    (T.pack $ "import Text.Printf (printf)\nimport qualified " ++ moduleName)
+    content
+
+addDayCase :: T.Text -> String -> Int -> T.Text
+addDayCase content moduleName day =
+  T.replace
+    (T.pack $ "runDay n = die")
+    (T.pack $ "runDay " ++ show day ++ " = " ++ moduleName ++ ".solution\nrunDay n = die")
+    content
+
+updateCabalFile :: String -> IO ()
+updateCabalFile moduleName = do
   cabalContent <- TIO.readFile "advent-of-code-haskell.cabal"
   
   let hasModule = T.isInfixOf (T.pack moduleName) cabalContent
-      hasExecutable = T.isInfixOf (T.pack $ "executable day" ++ dayPadded) cabalContent
   
-  if hasModule && hasExecutable
+  if hasModule
     then putStrLn "Cabal file already up to date"
     else do
-      let updatedContent = if not hasModule
-            then addModuleToLibrary cabalContent moduleName
-            else cabalContent
-          finalContent = if not hasExecutable
-            then addExecutable updatedContent dayPadded
-            else updatedContent
-      TIO.writeFile "advent-of-code-haskell.cabal" finalContent
-      when (not hasModule) $ putStrLn $ "Added " ++ moduleName ++ " to library"
-      when (not hasExecutable) $ putStrLn $ "Added executable day" ++ dayPadded
+      let updatedContent = addModuleToLibrary cabalContent moduleName
+      TIO.writeFile "advent-of-code-haskell.cabal" updatedContent
+      putStrLn $ "Added " ++ moduleName ++ " to library"
 
 addModuleToLibrary :: T.Text -> String -> T.Text
 addModuleToLibrary content moduleName =
@@ -125,19 +132,6 @@ addModuleToLibrary content moduleName =
     (T.pack "  exposed-modules: AoC.Template")
     (T.pack $ "  exposed-modules: AoC.Template\n                 , " ++ moduleName)
     content
-
-addExecutable :: T.Text -> String -> T.Text
-addExecutable content dayPadded =
-  content <> T.pack (unlines
-    [ ""
-    , "executable day" ++ dayPadded
-    , "  import: shared-properties"
-    , "  main-is: Main" ++ dayPadded ++ ".hs"
-    , "  hs-source-dirs: app"
-    , "  build-depends: base >=4.17 && <5"
-    , "               , advent-of-code-haskell"
-    , "               , text"
-    ])
 
 when :: Bool -> IO () -> IO ()
 when True action = action
