@@ -12,18 +12,15 @@ main :: IO ()
 main = do
   args <- getArgs
   case args of
-    [dayStr] -> scaffoldDay (read dayStr) False
-    [dayStr, "--download"] -> scaffoldDay (read dayStr) True
-    ["--download", dayStr] -> scaffoldDay (read dayStr) True
-    _ -> die "Usage: cabal run scaffold <day> [--download]"
+    [dayStr] -> scaffoldDay (read dayStr)
+    _ -> die "Usage: cabal run scaffold <day>"
 
-scaffoldDay :: Int -> Bool -> IO ()
-scaffoldDay day shouldDownload = do
+scaffoldDay :: Int -> IO ()
+scaffoldDay day = do
   let dayPadded = printf "%02d" day :: String
       dayModule = "Day" ++ dayPadded
       moduleFile = "src/" ++ dayModule ++ ".hs"
       mainFile = "app/Main" ++ dayPadded ++ ".hs"
-      inputFile = "data/inputs/" ++ dayPadded ++ ".txt"
       exampleFile = "data/examples/" ++ dayPadded ++ ".txt"
   
   createModuleFile moduleFile dayModule day
@@ -31,11 +28,8 @@ scaffoldDay day shouldDownload = do
   createEmptyFile exampleFile
   updateCabalFile dayModule dayPadded
   
-  when shouldDownload $ do
-    putStrLn "\nDownloading input..."
-    callCommand $ printf "cabal run download %d" day
-  
-  when (not shouldDownload) $ createEmptyFile inputFile
+  putStrLn "\nDownloading input..."
+  callCommand $ printf "cabal run download %d" day
   
   putStrLn "---"
   putStrLn $ "🎄 Type `cabal run day" ++ dayPadded ++ "` to run your solution."
