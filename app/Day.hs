@@ -1,18 +1,21 @@
 module Main (main) where
 
 import System.Environment (getArgs)
-import System.Exit (die)
-import System.Process (callCommand)
+import System.Exit (exitFailure)
 import Text.Printf (printf)
 
 main :: IO ()
 main = do
   args <- getArgs
   case args of
-    [dayStr] -> runDay (read dayStr)
-    _ -> die "Usage: cabal run day <day>"
+    [dayStr] -> do
+      let day = read dayStr :: Int
+      runDay day
+    _ -> do
+      putStrLn "Usage: cabal run day <day>"
+      exitFailure
 
 runDay :: Int -> IO ()
 runDay day = do
-  let dayPadded = printf "%02d" day :: String
-  callCommand $ printf "cabal run day%s" dayPadded
+  printf "Day %02d not yet implemented\n" day
+  exitFailure

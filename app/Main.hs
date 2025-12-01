@@ -14,13 +14,8 @@ main = do
   start <- getCurrentTime
   
   -- Run solutions here as they are created
-  -- runDay 1 Day01.main
+  -- Day01.solution
   
   end <- getCurrentTime
   let elapsed = diffUTCTime end start
   printf "\nTotal time: %.2fs\n" (realToFrac elapsed :: Double)
-
-runDay :: Int -> IO () -> IO ()
-runDay n action = do
-  printf "\n----------\n| Day %02d |\n----------\n" n
-  action

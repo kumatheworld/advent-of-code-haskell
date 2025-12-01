@@ -47,10 +47,8 @@ cabal run scaffold 1
 
 # output:
 # Created module file "src/Day01.hs"
-# Created main file "app/Main01.hs"
 # Created empty example file "data/examples/01.txt"
 # Added Day01 to library
-# Added executable day01
 # 
 # Downloading input...
 # Downloaded input for day 1 to data/inputs/01.txt
@@ -60,10 +58,9 @@ cabal run scaffold 1
 
 This creates:
 - Solution module in `src/Day01.hs`
-- Main file in `app/Main01.hs`
 - Empty example file in `data/examples/01.txt`
 - Downloads real input to `data/inputs/01.txt`
-- Updates `advent-of-code-haskell.cabal` with the new day
+- Updates `advent-of-code-haskell.cabal` to expose the new module
 
 ### ➡️ Run solutions for a day
 
@@ -140,9 +137,7 @@ advent-of-code-haskell/
 │   ├── Day.hs                   # Day runner (cabal run day <n>)
 │   ├── Download.hs              # Download puzzle inputs
 │   ├── Scaffold.hs              # Scaffold new day files
-│   ├── Submit.hs                # Submit solutions
-│   ├── Main01.hs                # Day 1 executable
-│   └── ...
+│   └── Submit.hs                # Submit solutions
 ├── data/
 │   ├── inputs/
 │   │   ├── 01.txt               # Day 1 input

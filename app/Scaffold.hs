@@ -132,7 +132,3 @@ addModuleToLibrary content moduleName =
     (T.pack "  exposed-modules: AoC.Template")
     (T.pack $ "  exposed-modules: AoC.Template\n                 , " ++ moduleName)
     content
-
-when :: Bool -> IO () -> IO ()
-when True action = action
-when False _ = return ()
