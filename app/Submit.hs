@@ -2,6 +2,7 @@ module Main (main) where
 
 import Network.HTTP.Simple
 import qualified Data.ByteString.Char8 as BS
+import qualified Data.ByteString.Lazy.Char8 as LBS
 import qualified Data.CaseInsensitive as CI
 import System.Environment (getArgs)
 import System.Exit (die)
@@ -23,13 +24,13 @@ submitSolution day part answer = do
   year <- readYear
   sessionCookie <- BS.readFile "session.cookie"
   let url = printf "https://adventofcode.com/%d/day/%d/answer" year day
-      body = BS.pack $ "level=" ++ show part ++ "&answer=" ++ answer
+      body = LBS.pack $ "level=" ++ show part ++ "&answer=" ++ answer
   
   request <- parseRequest url
   let request' = setRequestMethod "POST"
                $ setRequestHeader (CI.mk $ BS.pack "Cookie") [BS.pack "session=" <> BS.strip sessionCookie]
                $ setRequestHeader (CI.mk $ BS.pack "Content-Type") [BS.pack "application/x-www-form-urlencoded"]
-               $ setRequestBodyBS body
+               $ setRequestBodyLBS body
                $ request
   
   catch (do
