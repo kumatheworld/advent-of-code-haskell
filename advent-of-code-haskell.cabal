@@ -59,3 +59,12 @@ executable scaffold
   build-depends: base >=4.17 && <5
                , text
                , directory
+
+executable submit
+  import: shared-properties
+  main-is: Submit.hs
+  hs-source-dirs: app
+  build-depends: base >=4.17 && <5
+               , bytestring
+               , http-conduit
+               , case-insensitive
