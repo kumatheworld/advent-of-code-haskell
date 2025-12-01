@@ -21,7 +21,7 @@ downloadInput day year = do
       outputFile = printf "data/inputs/%02d.txt" day
   
   request <- parseRequest url
-  let request' = setRequestHeader "Cookie" [BS.pack "session=" <> BS.strip sessionCookie] request
+  let request' = setRequestHeader (BS.pack "Cookie") [BS.pack "session=" <> BS.strip sessionCookie] request
   
   catch (do
     response <- httpBS request'
