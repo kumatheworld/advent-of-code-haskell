@@ -68,6 +68,7 @@ executable download
   build-depends: base >=4.17 && <5
                , bytestring
                , http-conduit
+               , case-insensitive
 
 executable scaffold
   import: shared-properties
