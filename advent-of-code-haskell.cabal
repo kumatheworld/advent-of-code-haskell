@@ -16,8 +16,6 @@ common shared-properties
 library
   import: shared-properties
   exposed-modules: AoC.Template
-                 , Day02
-                 , Day01
   hs-source-dirs: src
   build-depends: base >=4.17 && <5
                , text
@@ -43,22 +41,6 @@ test-suite advent-of-code-test
   build-depends: base >=4.17 && <5
                , advent-of-code-haskell
                , hspec
-               , text
-
-executable day01
-  import: shared-properties
-  main-is: Main01.hs
-  hs-source-dirs: app
-  build-depends: base >=4.17 && <5
-               , advent-of-code-haskell
-               , text
-
-executable day02
-  import: shared-properties
-  main-is: Main02.hs
-  hs-source-dirs: app
-  build-depends: base >=4.17 && <5
-               , advent-of-code-haskell
                , text
 
 executable download
