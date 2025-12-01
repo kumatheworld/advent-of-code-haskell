@@ -15,9 +15,6 @@ import Text.Printf (printf)
 
 newtype Day = Day Int
 
-year :: Int
-year = 2025
-
 readInput :: Day -> IO T.Text
 readInput (Day n) = TIO.readFile $ printf "data/inputs/%02d.txt" n
 
