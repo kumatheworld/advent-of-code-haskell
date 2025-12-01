@@ -21,18 +21,21 @@ scaffoldDay day = do
       dayModule = "Day" ++ dayPadded
       moduleFile = "src/" ++ dayModule ++ ".hs"
       mainFile = "app/Main" ++ dayPadded ++ ".hs"
+      testFile = "test/" ++ dayModule ++ "Spec.hs"
       exampleFile = "data/examples/" ++ dayPadded ++ ".txt"
   
   createModuleFile moduleFile dayModule day
   createMainFile mainFile dayModule
+  createTestFile testFile dayModule day
   createEmptyFile exampleFile
   updateCabalFile dayModule dayPadded
+  updateTestSpec dayModule
   
   putStrLn "\nDownloading input..."
   callCommand $ printf "cabal run download %d" day
   
   putStrLn "---"
-  putStrLn $ "🎄 Type `cabal run day" ++ dayPadded ++ "` to run your solution."
+  putStrLn $ "🎄 Type `cabal run day " ++ show day ++ "` to run your solution."
 
 createModuleFile :: FilePath -> String -> Int -> IO ()
 createModuleFile path moduleName day = do
@@ -41,7 +44,7 @@ createModuleFile path moduleName day = do
     then putStrLn $ "Module file \"" ++ path ++ "\" already exists"
     else do
       let content = T.pack $ unlines
-            [ "module " ++ moduleName ++ " (solution) where"
+            [ "module " ++ moduleName ++ " (solution, part1, part2) where"
             , ""
             , "import AoC.Template (Day(..), solve)"
             , "import qualified Data.Text as T"
@@ -78,6 +81,32 @@ createMainFile path moduleName = do
       TIO.writeFile path content
       putStrLn $ "Created main file \"" ++ path ++ "\""
 
+createTestFile :: FilePath -> String -> Int -> IO ()
+createTestFile path moduleName day = do
+  exists <- doesFileExist path
+  if exists
+    then putStrLn $ "Test file \"" ++ path ++ "\" already exists"
+    else do
+      let content = T.pack $ unlines
+            [ "module " ++ moduleName ++ "Spec (spec) where"
+            , ""
+            , "import Test.Hspec"
+            , "import qualified " ++ moduleName
+            , "import AoC.Template (readExample, Day(..))"
+            , ""
+            , "spec :: Spec"
+            , "spec = describe \"" ++ moduleName ++ "\" $ do"
+            , "  it \"solves part 1 correctly\" $ do"
+            , "    input <- readExample (Day " ++ show day ++ ")"
+            , "    " ++ moduleName ++ ".part1 input `shouldBe` Just 0  -- TODO: Replace with expected value"
+            , "  "
+            , "  it \"solves part 2 correctly\" $ do"
+            , "    input <- readExample (Day " ++ show day ++ ")"
+            , "    " ++ moduleName ++ ".part2 input `shouldBe` Just 0  -- TODO: Replace with expected value"
+            ]
+      TIO.writeFile path content
+      putStrLn $ "Created test file \"" ++ path ++ "\""
+
 createEmptyFile :: FilePath -> IO ()
 createEmptyFile path = do
   exists <- doesFileExist path
@@ -86,6 +115,38 @@ createEmptyFile path = do
     else do
       writeFile path ""
       putStrLn $ "Created empty file \"" ++ path ++ "\""
+
+updateTestSpec :: String -> IO ()
+updateTestSpec moduleName = do
+  specContent <- TIO.readFile "test/Spec.hs"
+  let hasImport = T.isInfixOf (T.pack $ "import qualified " ++ moduleName ++ "Spec") specContent
+      hasSpec = T.isInfixOf (T.pack $ moduleName ++ "Spec.spec") specContent
+  
+  if hasImport && hasSpec
+    then putStrLn "Test Spec.hs already up to date"
+    else do
+      let updatedContent = if not hasImport
+            then addTestImport specContent moduleName
+            else specContent
+          finalContent = if not hasSpec
+            then addTestSpec updatedContent moduleName
+            else updatedContent
+      TIO.writeFile "test/Spec.hs" finalContent
+      putStrLn $ "Added " ++ moduleName ++ "Spec to test suite"
+
+addTestImport :: T.Text -> String -> T.Text
+addTestImport content moduleName =
+  T.replace
+    (T.pack "import Test.Hspec")
+    (T.pack $ "import Test.Hspec\nimport qualified " ++ moduleName ++ "Spec")
+    content
+
+addTestSpec :: T.Text -> String -> T.Text
+addTestSpec content moduleName =
+  T.replace
+    (T.pack "main = hspec $ do")
+    (T.pack $ "main = hspec $ do\n  " ++ moduleName ++ "Spec.spec")
+    content
 
 updateCabalFile :: String -> String -> IO ()
 updateCabalFile moduleName dayPadded = do
