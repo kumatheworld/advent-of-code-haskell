@@ -24,6 +24,7 @@ library
                , bytestring
                , time
                , process
+               , hspec
 
 executable advent-of-code
   import: shared-properties
@@ -77,27 +78,3 @@ executable day
   hs-source-dirs: app
   build-depends: base >=4.17 && <5
                , process
-
-executable day01
-  import: shared-properties
-  main-is: Main01.hs
-  hs-source-dirs: app
-  build-depends: base >=4.17 && <5
-               , advent-of-code-haskell
-               , text
-
-executable day02
-  import: shared-properties
-  main-is: Main02.hs
-  hs-source-dirs: app
-  build-depends: base >=4.17 && <5
-               , advent-of-code-haskell
-               , text
-
-executable day03
-  import: shared-properties
-  main-is: Main03.hs
-  hs-source-dirs: app
-  build-depends: base >=4.17 && <5
-               , advent-of-code-haskell
-               , text
