@@ -17,7 +17,7 @@ This template supports all major OS (macOS, Linux, Windows).
 ### 📝 Create your repository
 
 1. Clone this repository to your computer.
-2. If you are solving a previous year's advent of code, change the `year` constant in `app/Download.hs`, `app/Submit.hs`, and `src/AoC/Template.hs`.
+2. If you are solving a previous year's advent of code, change the year in `.aoc-year`.
 
 ### 💻 Setup Haskell
 
@@ -147,6 +147,7 @@ advent-of-code-haskell/
 │       └── ...
 ├── test/
 │   └── Spec.hs                  # Test suite
+├── .aoc-year                    # Year configuration (change for different years)
 └── advent-of-code-haskell.cabal # Project configuration
 ```
 
