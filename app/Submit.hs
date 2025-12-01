@@ -27,7 +27,7 @@ submitSolution day part answer = do
       body = LBS.pack $ "level=" ++ show part ++ "&answer=" ++ answer
   
   request <- parseRequest url
-  let request' = setRequestMethod "POST"
+  let request' = setRequestMethod (BS.pack "POST")
                $ setRequestHeader (CI.mk $ BS.pack "Cookie") [BS.pack "session=" <> BS.strip sessionCookie]
                $ setRequestHeader (CI.mk $ BS.pack "Content-Type") [BS.pack "application/x-www-form-urlencoded"]
                $ setRequestBodyLBS body
