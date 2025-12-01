@@ -73,7 +73,8 @@ createModuleFile path moduleName day = do
       TIO.writeFile path content
       putStrLn $ "Created module file \"" ++ path ++ "\""
 
-createMainFile :: FilePath -> String -> IO ()\ncreateMainFile path moduleName = do
+createMainFile :: FilePath -> String -> IO ()
+createMainFile path moduleName = do
   exists <- doesFileExist path
   if exists
     then putStrLn $ "Main file \"" ++ path ++ "\" already exists"
