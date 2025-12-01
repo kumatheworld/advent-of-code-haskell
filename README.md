@@ -26,11 +26,7 @@ This template supports all major OS (macOS, Linux, Windows).
 3. (recommended) Install the [Haskell Language Server](https://haskell-language-server.readthedocs.io/): `ghcup install hls`
 4. (optional) Install a native debugger. If you are using VS Code, the [Haskell extension](https://marketplace.visualstudio.com/items?itemName=haskell.haskell) provides good integration.
 
-✨ You can start solving puzzles now! Head to the [Usage section](#usage) to see how to use this template.
-
-## Usage
-
-### ➡️ Download puzzle input
+### 🔑 Setup session cookie
 
 To automatically download puzzle inputs, you need your Advent of Code session cookie:
 
@@ -39,51 +35,59 @@ To automatically download puzzle inputs, you need your Advent of Code session co
 3. Copy the value of the `session` cookie
 4. Save it to `session.cookie` in the project root (this file is gitignored)
 
-Then download inputs:
+✨ You can start solving puzzles now! Head to the [Usage section](#usage) to see how to use this template.
+
+## Usage
+
+### ➡️ Scaffold a new day
 
 ```sh
-cabal run download 1
-```
-
-### ➡️ Scaffold a day
-
-```sh
+# Creates files and downloads input automatically
 cabal run scaffold 1
 
 # output:
 # Created module file "src/Day01.hs"
-# Created empty input file "data/inputs/01.txt"
+# Created main file "app/Main01.hs"
 # Created empty example file "data/examples/01.txt"
+# Added Day01 to library
+# Added executable day01
+# 
+# Downloading input...
+# Downloaded input for day 1 to data/inputs/01.txt
 # ---
-# 🎄 Type `cabal run day01` to run your solution.
+# 🎄 Type `cabal run day 1` to run your solution.
 ```
 
-Individual solutions live in the `./src/` directory as separate modules. _Inputs_ and _examples_ live in the `./data` directory.
-
-Every solution has _tests_ referencing its _example_ file in `./data/examples`. Use these tests to develop and debug your solutions against the example input.
+This creates:
+- Solution module in `src/Day01.hs`
+- Main file in `app/Main01.hs`
+- Empty example file in `data/examples/01.txt`
+- Downloads real input to `data/inputs/01.txt`
+- Updates `advent-of-code-haskell.cabal` with the new day
 
 ### ➡️ Run solutions for a day
 
 ```sh
-cabal run day01
+cabal run day 1
 
 # output:
-# Part 1: 42
-# Part 2: 42
+# Part 1: Just 42
+# Part 2: Just 42
 ```
-
-The solution executables run your solution against real puzzle inputs.
 
 ### ➡️ Submit solutions
 
-You can submit solutions automatically:
+You can submit solutions automatically using `solveAndSubmit` in your solution:
 
 ```sh
-# Submit manually
-cabal run submit 1 1 42
+# Run with --submit flag to auto-submit both parts
+cabal run day 1 -- --submit
+```
 
-# Or use solveAndSubmit in your solution and run with --submit flag
-cabal run day01 -- --submit
+Or submit manually:
+
+```sh
+cabal run submit 1 1 42  # day part answer
 ```
 
 ### ➡️ Run all solutions
@@ -95,12 +99,10 @@ cabal run advent-of-code
 # ----------
 # | Day 01 |
 # ----------
-# Part 1: 42
-# Part 2: 42
+# Part 1: Just 42
+# Part 2: Just 42
 # <...other days...>
 ```
-
-This runs all solutions sequentially and prints output to the command-line.
 
 ### ➡️ Run tests
 
@@ -108,7 +110,7 @@ This runs all solutions sequentially and prints output to the command-line.
 cabal test
 ```
 
-To run tests for a specific day, you can use `cabal test --test-show-details=direct` for more verbose output.
+Add tests for each day in `test/` directory. Use `cabal test --test-show-details=direct` for verbose output.
 
 ### ➡️ Build optimized solutions
 
@@ -135,9 +137,12 @@ advent-of-code-haskell/
 │   └── ...
 ├── app/
 │   ├── Main.hs                  # Main executable that runs all solutions
+│   ├── Day.hs                   # Day runner (cabal run day <n>)
 │   ├── Download.hs              # Download puzzle inputs
 │   ├── Scaffold.hs              # Scaffold new day files
-│   └── Submit.hs                # Submit solutions
+│   ├── Submit.hs                # Submit solutions
+│   ├── Main01.hs                # Day 1 executable
+│   └── ...
 ├── data/
 │   ├── inputs/
 │   │   ├── 01.txt               # Day 1 input
