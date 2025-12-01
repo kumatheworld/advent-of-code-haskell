@@ -68,3 +68,11 @@ executable download
   build-depends: base ^>=4.21.0.0
                , bytestring
                , http-conduit
+
+executable scaffold
+  import: shared-properties
+  main-is: Scaffold.hs
+  hs-source-dirs: app
+  build-depends: base ^>=4.21.0.0
+               , text
+               , directory
