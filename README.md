@@ -4,9 +4,11 @@ Solutions for [Advent of Code](https://adventofcode.com/) in [Haskell](https://w
 
 > **Note**: This template is inspired by and adapted from [fspoettel/advent-of-code-rust](https://github.com/fspoettel/advent-of-code-rust). Many thanks to Felix Spoettel for the excellent original Rust template!
 > 
-> Haskell adaptation created with assistance from Amazon Q Developer (Claude Sonnet 4).
+> Haskell adaptation created with assistance from Kiro CLI.
 
-<!--- advent_readme_stars table --->\n\n<!--- benchmarking table --->\n\n---
+<!--- advent_readme_stars table --->
+
+<!--- benchmarking table --->
 
 ## Template setup
 
@@ -15,7 +17,7 @@ This template supports all major OS (macOS, Linux, Windows).
 ### 📝 Create your repository
 
 1. Clone this repository to your computer.
-2. If you are solving a previous year's advent of code, change the year in the README and solution files.
+2. If you are solving a previous year's advent of code, change the `year` constant in `app/Download.hs`, `app/Submit.hs`, and `src/AoC/Template.hs`.
 
 ### 💻 Setup Haskell
 
@@ -23,8 +25,6 @@ This template supports all major OS (macOS, Linux, Windows).
 2. Install GHC and Cabal: `ghcup install ghc && ghcup install cabal`
 3. (recommended) Install the [Haskell Language Server](https://haskell-language-server.readthedocs.io/): `ghcup install hls`
 4. (optional) Install a native debugger. If you are using VS Code, the [Haskell extension](https://marketplace.visualstudio.com/items?itemName=haskell.haskell) provides good integration.
-
----
 
 ✨ You can start solving puzzles now! Head to the [Usage section](#usage) to see how to use this template.
 
@@ -42,15 +42,13 @@ To automatically download puzzle inputs, you need your Advent of Code session co
 Then download inputs:
 
 ```sh
-# example: download day 1 for 2025
-cabal run download 1 2025
+cabal run download 1
 ```
 
 ### ➡️ Scaffold a day
 
 ```sh
-# example: `./scripts/scaffold.sh 1`
-./scripts/scaffold.sh <day>
+cabal run scaffold 1
 
 # output:
 # Created module file "src/Day01.hs"
@@ -67,8 +65,7 @@ Every solution has _tests_ referencing its _example_ file in `./data/examples`. 
 ### ➡️ Run solutions for a day
 
 ```sh
-# example: `cabal run day01`
-cabal run day<day>
+cabal run day01
 
 # output:
 # Part 1: 42
@@ -76,6 +73,18 @@ cabal run day<day>
 ```
 
 The solution executables run your solution against real puzzle inputs.
+
+### ➡️ Submit solutions
+
+You can submit solutions automatically:
+
+```sh
+# Submit manually
+cabal run submit 1 1 42
+
+# Or use solveAndSubmit in your solution and run with --submit flag
+cabal run day01 -- --submit
+```
 
 ### ➡️ Run all solutions
 
@@ -125,7 +134,10 @@ advent-of-code-haskell/
 │   ├── Day02.hs                 # Day 2 solution
 │   └── ...
 ├── app/
-│   └── Main.hs                  # Main executable that runs all solutions
+│   ├── Main.hs                  # Main executable that runs all solutions
+│   ├── Download.hs              # Download puzzle inputs
+│   ├── Scaffold.hs              # Scaffold new day files
+│   └── Submit.hs                # Submit solutions
 ├── data/
 │   ├── inputs/
 │   │   ├── 01.txt               # Day 1 input
@@ -135,8 +147,6 @@ advent-of-code-haskell/
 │       └── ...
 ├── test/
 │   └── Spec.hs                  # Test suite
-├── scripts/
-│   └── scaffold.sh              # Script to scaffold new days
 └── advent-of-code-haskell.cabal # Project configuration
 ```
 
