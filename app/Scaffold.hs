@@ -2,6 +2,7 @@ module Main (main) where
 
 import System.Environment (getArgs)
 import System.Exit (die)
+import System.Process (callCommand)
 import Text.Printf (printf)
 import System.Directory (doesFileExist)
 import qualified Data.Text as T
@@ -11,11 +12,13 @@ main :: IO ()
 main = do
   args <- getArgs
   case args of
-    [dayStr] -> scaffoldDay (read dayStr)
-    _ -> die "Usage: cabal run scaffold <day>"
+    [dayStr] -> scaffoldDay (read dayStr) False
+    [dayStr, "--download"] -> scaffoldDay (read dayStr) True
+    ["--download", dayStr] -> scaffoldDay (read dayStr) True
+    _ -> die "Usage: cabal run scaffold <day> [--download]"
 
-scaffoldDay :: Int -> IO ()
-scaffoldDay day = do
+scaffoldDay :: Int -> Bool -> IO ()
+scaffoldDay day shouldDownload = do
   let dayPadded = printf "%02d" day :: String
       dayModule = "Day" ++ dayPadded
       moduleFile = "src/" ++ dayModule ++ ".hs"
@@ -25,9 +28,14 @@ scaffoldDay day = do
   
   createModuleFile moduleFile dayModule day
   createMainFile mainFile dayModule
-  createEmptyFile inputFile
   createEmptyFile exampleFile
   updateCabalFile dayModule dayPadded
+  
+  when shouldDownload $ do
+    putStrLn "\nDownloading input..."
+    callCommand $ printf "cabal run download %d" day
+  
+  when (not shouldDownload) $ createEmptyFile inputFile
   
   putStrLn "---"
   putStrLn $ "🎄 Type `cabal run day" ++ dayPadded ++ "` to run your solution."
@@ -120,7 +128,7 @@ addExecutable content dayPadded =
     , "  import: shared-properties"
     , "  main-is: Main" ++ dayPadded ++ ".hs"
     , "  hs-source-dirs: app"
-    , "  build-depends: base ^>=4.21.0.0"
+    , "  build-depends: base >=4.17 && <5"
     , "               , advent-of-code-haskell"
     , "               , text"
     ])
