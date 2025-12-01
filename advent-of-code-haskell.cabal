@@ -60,6 +60,7 @@ executable scaffold
   build-depends: base >=4.17 && <5
                , text
                , directory
+               , process
 
 executable submit
   import: shared-properties
