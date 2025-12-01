@@ -8,8 +8,8 @@ import System.Exit (die)
 import Text.Printf (printf)
 import Control.Exception (catch, SomeException)
 
-year :: Int
-year = 2025
+readYear :: IO Int
+readYear = read <$> readFile ".aoc-year"
 
 main :: IO ()
 main = do
@@ -20,6 +20,7 @@ main = do
 
 submitSolution :: Int -> Int -> String -> IO ()
 submitSolution day part answer = do
+  year <- readYear
   sessionCookie <- BS.readFile "session.cookie"
   let url = printf "https://adventofcode.com/%d/day/%d/answer" year day
       body = BS.pack $ "level=" ++ show part ++ "&answer=" ++ answer
