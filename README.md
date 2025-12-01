@@ -30,6 +30,22 @@ This template supports all major OS (macOS, Linux, Windows).
 
 ## Usage
 
+### ➡️ Download puzzle input
+
+To automatically download puzzle inputs, you need your Advent of Code session cookie:
+
+1. Log in to [Advent of Code](https://adventofcode.com/)
+2. Open browser DevTools (F12) → Application/Storage → Cookies
+3. Copy the value of the `session` cookie
+4. Save it to `session.cookie` in the project root (this file is gitignored)
+
+Then download inputs:
+
+```sh
+# example: download day 1 for 2025
+cabal run download 1 2025
+```
+
 ### ➡️ Scaffold a day
 
 ```sh
