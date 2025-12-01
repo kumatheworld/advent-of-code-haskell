@@ -8,15 +8,18 @@ import System.Exit (die)
 import Text.Printf (printf)
 import Control.Exception (catch, SomeException)
 
+year :: Int
+year = 2025
+
 main :: IO ()
 main = do
   args <- getArgs
   case args of
-    [dayStr, partStr, answer, year] -> submitSolution (read dayStr) (read partStr) answer (read year)
-    _ -> die "Usage: cabal run submit <day> <part> <answer> <year>"
+    [dayStr, partStr, answer] -> submitSolution (read dayStr) (read partStr) answer
+    _ -> die "Usage: cabal run submit <day> <part> <answer>"
 
-submitSolution :: Int -> Int -> String -> Int -> IO ()
-submitSolution day part answer year = do
+submitSolution :: Int -> Int -> String -> IO ()
+submitSolution day part answer = do
   sessionCookie <- BS.readFile "session.cookie"
   let url = printf "https://adventofcode.com/%d/day/%d/answer" year day
       body = BS.pack $ "level=" ++ show part ++ "&answer=" ++ answer
