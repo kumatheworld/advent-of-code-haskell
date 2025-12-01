@@ -1,8 +1,11 @@
 {
     "name": "haskell-devcontainer",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-    "postCreateCommand": "curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh && export PATH=\"$HOME/.ghcup/bin:$PATH\" && ghcup install ghc && ghcup install cabal && ghc --version && cabal --version",
+    "postCreateCommand": "curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_ADJUST_BASHRC=1 sh && . ~/.bashrc && ghcup install ghc && ghcup install cabal && ghc --version && cabal --version",
     "remoteUser": "vscode",
+    "remoteEnv": {
+        "PATH": "${containerEnv:HOME}/.ghcup/bin:${containerEnv:PATH}"
+    },
     "mounts": [
         "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
     ],
