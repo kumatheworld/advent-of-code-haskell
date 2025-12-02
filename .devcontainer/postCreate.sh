@@ -31,4 +31,14 @@ echo "Updating cabal package list and installing ormolu"
 cabal update
 cabal v2-install ormolu
 
+echo "Adding ghcup/cabal to PATH in ~/.profile"
+# Ensure PATH export is in ~/.profile for future shell sessions
+if ! grep -q "ghcup/cabal" ~/.profile 2>/dev/null; then
+  cat >> ~/.profile << 'PATHEOF'
+
+# ghcup and cabal
+export PATH="$HOME/.ghcup/bin:$HOME/.cabal/bin:$PATH"
+PATHEOF
+fi
+
 echo "Devcontainer setup complete"

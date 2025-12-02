@@ -65,7 +65,6 @@ createModuleFile path moduleName day = do
             , "  it \"solves part 1 correctly\" $ do"
             , "    input <- readExample day"
             , "    part1 input `shouldBe` Just 0  -- TODO: Replace with expected value"
-            , "  "
             , "  it \"solves part 2 correctly\" $ do"
             , "    input <- readExample day"
             , "    part2 input `shouldBe` Just 0  -- TODO: Replace with expected value"
