@@ -67,12 +67,12 @@ cabal run scaffold 1
 
 # output:
 # Created module file "src/Day01.hs"
-# Created empty example file "data/examples/01.txt"
-# Added Day01 to library
-# Added Day01 to test/Spec.hs (auto-registers tests)
-# Registered Day01 in the day runner (app/Day.hs)
-# 
-# Downloading input...
+# Created empty file "data/examples/01.txt"
+# Cabal file already up to date
+# Spec already up to date
+# Added Day01 to day runner
+
+#+ Downloading input...
 # Downloaded input for day 1 to data/inputs/01.txt
 # ---
 # 🎄 Type `cabal run day 1` to run your solution.
