@@ -1,4 +1,16 @@
 {
+  "name": "advent-of-code-haskell",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "postCreateCommand": "./.devcontainer/postCreate.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "haskell.haskell"
+      ]
+    }
+  }
+}
+{
     "name": "haskell-devcontainer",
     "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
     "postCreateCommand": "sudo apt-get update && sudo apt-get install -y libgmp-dev && curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_ADJUST_BASHRC=1 sh && export PATH=\"$HOME/.ghcup/bin:$PATH\" && ghcup install ghc && ghcup install cabal",
