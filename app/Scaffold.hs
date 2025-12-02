@@ -1,12 +1,12 @@
 module Main (main) where
 
+import qualified Data.Text as T
+import qualified Data.Text.IO as TIO
+import System.Directory (doesFileExist)
 import System.Environment (getArgs)
 import System.Exit (die)
 import System.Process (callCommand)
 import Text.Printf (printf)
-import System.Directory (doesFileExist)
-import qualified Data.Text as T
-import qualified Data.Text.IO as TIO
 
 main :: IO ()
 main = do
@@ -21,16 +21,16 @@ scaffoldDay day = do
       dayModule = "Day" ++ dayPadded
       moduleFile = "src/" ++ dayModule ++ ".hs"
       exampleFile = "data/examples/" ++ dayPadded ++ ".txt"
-  
+
   createModuleFile moduleFile dayModule day
   createEmptyFile exampleFile
   updateCabalFile dayModule
   updateTestSpec dayModule
   updateDayRunner dayModule day
-  
+
   putStrLn "\nDownloading input..."
   callCommand $ printf "cabal run download %d" day
-  
+
   putStrLn "---"
   putStrLn $ "🎄 Type `cabal run day " ++ show day ++ "` to run your solution."
 
@@ -40,35 +40,37 @@ createModuleFile path moduleName day = do
   if exists
     then putStrLn $ "Module file \"" ++ path ++ "\" already exists"
     else do
-      let content = T.pack $ unlines
-            [ "module " ++ moduleName ++ " (solution, part1, part2, tests) where"
-            , ""
-            , "import AoC.Template (Day(..), solve, readExample)"
-            , "import qualified Data.Text as T"
-            , "import Test.Hspec"
-            , ""
-            , "day :: Day"
-            , "day = Day " ++ show day
-            , ""
-            , "part1 :: T.Text -> Maybe Int"
-            , "part1 _input = Nothing"
-            , ""
-            , "part2 :: T.Text -> Maybe Int"
-            , "part2 _input = Nothing"
-            , ""
-            , "solution :: IO ()"
-            , "solution = solve day part1 part2"
-            , ""
-            , "-- Tests"
-            , "tests :: Spec"
-            , "tests = describe \"" ++ moduleName ++ "\" $ do"
-            , "  it \"solves part 1 correctly\" $ do"
-            , "    input <- readExample day"
-            , "    part1 input `shouldBe` Just 0  -- TODO: Replace with expected value"
-            , "  it \"solves part 2 correctly\" $ do"
-            , "    input <- readExample day"
-            , "    part2 input `shouldBe` Just 0  -- TODO: Replace with expected value"
-            ]
+      let content =
+            T.pack $
+              unlines
+                [ "module " ++ moduleName ++ " (solution, part1, part2, tests) where",
+                  "",
+                  "import AoC.Template (Day(..), solve, readExample)",
+                  "import qualified Data.Text as T",
+                  "import Test.Hspec",
+                  "",
+                  "day :: Day",
+                  "day = Day " ++ show day,
+                  "",
+                  "part1 :: T.Text -> Maybe Int",
+                  "part1 _input = Nothing",
+                  "",
+                  "part2 :: T.Text -> Maybe Int",
+                  "part2 _input = Nothing",
+                  "",
+                  "solution :: IO ()",
+                  "solution = solve day part1 part2",
+                  "",
+                  "-- Tests",
+                  "tests :: Spec",
+                  "tests = describe \"" ++ moduleName ++ "\" $ do",
+                  "  it \"solves part 1 correctly\" $ do",
+                  "    input <- readExample day",
+                  "    part1 input `shouldBe` Just 0  -- TODO: Replace with expected value",
+                  "  it \"solves part 2 correctly\" $ do",
+                  "    input <- readExample day",
+                  "    part2 input `shouldBe` Just 0  -- TODO: Replace with expected value"
+                ]
       TIO.writeFile path content
       putStrLn $ "Created module file \"" ++ path ++ "\""
 
@@ -84,9 +86,9 @@ createEmptyFile path = do
 updateCabalFile :: String -> IO ()
 updateCabalFile moduleName = do
   cabalContent <- TIO.readFile "advent-of-code-haskell.cabal"
-  
+
   let hasModule = T.isInfixOf (T.pack moduleName) cabalContent
-  
+
   if hasModule
     then putStrLn "Cabal file already up to date"
     else do
@@ -117,12 +119,14 @@ updateDayRunner moduleName day = do
       if hasImport && hasCase
         then putStrLn "Day runner already up to date"
         else do
-          let withImport = if not hasImport
-                then addDayImport dayContent moduleName
-                else dayContent
-              withCase = if not hasCase
-                then addDayCase withImport moduleName day
-                else withImport
+          let withImport =
+                if not hasImport
+                  then addDayImport dayContent moduleName
+                  else dayContent
+              withCase =
+                if not hasCase
+                  then addDayCase withImport moduleName day
+                  else withImport
           TIO.writeFile dayFile withCase
           putStrLn $ "Added " ++ moduleName ++ " to day runner"
 
@@ -149,18 +153,19 @@ updateTestSpec moduleName = do
     else do
       specContent <- TIO.readFile specPath
       let importLine = T.pack $ "import qualified " ++ moduleName
-          testLine = T.pack $ "    " ++ moduleName ++ ".tests"
           hasImport = T.isInfixOf importLine specContent
           hasTest = T.isInfixOf (T.pack $ moduleName ++ ".tests") specContent
 
       if hasImport && hasTest
         then putStrLn "Spec already up to date"
         else do
-          let withImport = if not hasImport
-                then T.replace (T.pack "-- AUTOGEN-IMPORTS") (T.pack $ "-- AUTOGEN-IMPORTS\nimport qualified " ++ moduleName) specContent
-                else specContent
-              withTest = if not hasTest
-                then T.replace (T.pack "-- AUTOGEN-TESTS") (T.pack $ "-- AUTOGEN-TESTS\n    " ++ moduleName ++ ".tests") withImport
-                else withImport
+          let withImport =
+                if not hasImport
+                  then T.replace (T.pack "-- AUTOGEN-IMPORTS") (T.pack $ "-- AUTOGEN-IMPORTS\nimport qualified " ++ moduleName) specContent
+                  else specContent
+              withTest =
+                if not hasTest
+                  then T.replace (T.pack "-- AUTOGEN-TESTS") (T.pack $ "-- AUTOGEN-TESTS\n    " ++ moduleName ++ ".tests") withImport
+                  else withImport
           TIO.writeFile specPath withTest
           putStrLn $ "Added " ++ moduleName ++ " to test/Spec.hs"
