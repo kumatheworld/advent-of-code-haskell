@@ -37,6 +37,26 @@ To automatically download puzzle inputs, you need your Advent of Code session co
 
 ✨ You can start solving puzzles now! Head to the [Usage section](#usage) to see how to use this template.
 
+## Development container (recommended)
+
+This repository includes a VS Code devcontainer configuration that sets up a Haskell development environment automatically.
+
+- What it installs: `ghcup`, GHC, `cabal`, Haskell Language Server (HLS), and `ormolu` (the Haskell formatter).
+- How it runs: when you reopen the project in a Codespace or "Remote - Containers" session, the container runs `.devcontainer/postCreate.sh` which installs the tools. This may take a few minutes on first run.
+- Editor integration: the repository also contains workspace settings and extension recommendations to enable format-on-save for Haskell files using Ormolu (VS Code will recommend the `haskell.haskell` extension).
+
+Usage:
+
+1. In VS Code open the Command Palette and choose **Remote-Containers: Reopen in Container** (or open the repo in Codespaces). The container will be provisioned and the post-create script will run.
+2. After the container finishes, the Haskell extension should activate. Open a `.hs` file and try **Format Document** (Shift+Alt+F) to verify Ormolu is working. Format-on-save will then run automatically.
+
+Troubleshooting:
+
+- If formatting doesn't run, check the Output panel → `Haskell` / `HLS` for errors.
+- If the workspace is untrusted in VS Code, trust it to allow workspace settings and recommended extensions.
+- The post-create script installs tools with `ghcup` and `cabal`; if you prefer a prebuilt image for faster starts, ask and I can add a Dockerfile-based devcontainer image.
+
+
 ## Usage
 
 ### ➡️ Scaffold a new day
@@ -49,6 +69,8 @@ cabal run scaffold 1
 # Created module file "src/Day01.hs"
 # Created empty example file "data/examples/01.txt"
 # Added Day01 to library
+# Added Day01 to test/Spec.hs (auto-registers tests)
+# Registered Day01 in the day runner (app/Day.hs)
 # 
 # Downloading input...
 # Downloaded input for day 1 to data/inputs/01.txt
@@ -60,7 +82,9 @@ This creates:
 - Solution module in `src/Day01.hs`
 - Empty example file in `data/examples/01.txt`
 - Downloads real input to `data/inputs/01.txt`
-- Updates `advent-of-code-haskell.cabal` to expose the new module
+- Updates `advent-of-code-haskell.cabal` to expose the module
+- Auto-registers the new day's tests in `test/Spec.hs` so `cabal test` runs them
+- Registers the new day in `app/Day.hs` so you can run the solution with `cabal run day <n>`
 
 ### ➡️ Run solutions for a day
 
@@ -137,8 +161,8 @@ advent-of-code-haskell/
 │   ├── Day.hs                   # Day runner (cabal run day <n>)
 │   ├── Download.hs              # Download puzzle inputs
 │   ├── Scaffold.hs              # Scaffold new day files
-│   └── Submit.hs                # Submit solutions
-├── data/
+│   ├── Submit.hs                # Submit solutions
+│   └── (scaffold auto-updates Day.hs to register new days)
 │   ├── inputs/
 │   │   ├── 01.txt               # Day 1 input
 │   │   └── ...
