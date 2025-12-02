@@ -11,16 +11,5 @@ dist-newstyle/
 .HTF/
 .ghc.environment.*
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
 # Advent of Code
 session.cookie

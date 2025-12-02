@@ -131,7 +131,9 @@ cabal run advent-of-code
 cabal test
 ```
 
-Run tests for a specific day using HSpec's `--match` passed via Cabal's `--test-options`. Example:
+Run tests for a specific day in two ways:
+
+- Using HSpec's `--match` passed through Cabal's `--test-options` (manual):
 
 ```sh
 # Run all tests that mention `Day01` in their description
@@ -140,6 +142,15 @@ cabal test --test-options='--match /Day01/'
 # Run a single example by full path (note quoting; match is a regex):
 cabal test --test-options='--match "/Advent of Code Tests/Day01/solves part 1 correctly/"'
 ```
+
+- Using the included Haskell wrapper executable `test-day` (convenience):
+
+```sh
+# Runs the tests that match `DayNN` for the given day
+cabal run test-day 1
+```
+
+The wrapper runs `cabal test --test-options='--match /DayNN/'` for you and avoids manual quoting.
 
 This is useful after scaffolding a new day to run only that day's tests quickly.
 

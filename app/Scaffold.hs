@@ -25,6 +25,8 @@ scaffoldDay day = do
   createModuleFile moduleFile dayModule day
   createEmptyFile exampleFile
   updateCabalFile dayModule
+  updateTestSpec dayModule
+  updateDayRunner dayModule day
   
   putStrLn "\nDownloading input..."
   callCommand $ printf "cabal run download %d" day
@@ -99,3 +101,67 @@ addModuleToLibrary content moduleName =
     (T.pack "  exposed-modules: AoC.Template")
     (T.pack $ "  exposed-modules: AoC.Template\n                 , " ++ moduleName)
     content
+
+updateDayRunner :: String -> Int -> IO ()
+updateDayRunner moduleName day = do
+  let dayFile = "app/Day.hs"
+  exists <- doesFileExist dayFile
+  if not exists
+    then putStrLn $ "Day runner \"" ++ dayFile ++ "\" not found; skipping registration"
+    else do
+      dayContent <- TIO.readFile dayFile
+      let importLine = T.pack $ "import qualified " ++ moduleName
+          caseLine = T.pack $ "runDay " ++ show day ++ " = " ++ moduleName ++ ".solution"
+          hasImport = T.isInfixOf importLine dayContent
+          hasCase = T.isInfixOf caseLine dayContent
+
+      if hasImport && hasCase
+        then putStrLn "Day runner already up to date"
+        else do
+          let withImport = if not hasImport
+                then addDayImport dayContent moduleName
+                else dayContent
+              withCase = if not hasCase
+                then addDayCase withImport moduleName day
+                else withImport
+          TIO.writeFile dayFile withCase
+          putStrLn $ "Added " ++ moduleName ++ " to day runner"
+
+addDayImport :: T.Text -> String -> T.Text
+addDayImport content moduleName =
+  T.replace
+    (T.pack "import Text.Printf (printf)")
+    (T.pack $ "import Text.Printf (printf)\nimport qualified " ++ moduleName)
+    content
+
+addDayCase :: T.Text -> String -> Int -> T.Text
+addDayCase content moduleName day =
+  T.replace
+    (T.pack "runDay day = do")
+    (T.pack $ "runDay " ++ show day ++ " = " ++ moduleName ++ ".solution\nrunDay day = do")
+    content
+
+updateTestSpec :: String -> IO ()
+updateTestSpec moduleName = do
+  let specPath = "test/Spec.hs"
+  exists <- doesFileExist specPath
+  if not exists
+    then putStrLn $ "Spec file \"" ++ specPath ++ "\" not found; skipping test registration"
+    else do
+      specContent <- TIO.readFile specPath
+      let importLine = T.pack $ "import qualified " ++ moduleName
+          testLine = T.pack $ "    " ++ moduleName ++ ".tests"
+          hasImport = T.isInfixOf importLine specContent
+          hasTest = T.isInfixOf (T.pack $ moduleName ++ ".tests") specContent
+
+      if hasImport && hasTest
+        then putStrLn "Spec already up to date"
+        else do
+          let withImport = if not hasImport
+                then T.replace (T.pack "-- AUTOGEN-IMPORTS") (T.pack $ "-- AUTOGEN-IMPORTS\nimport qualified " ++ moduleName) specContent
+                else specContent
+              withTest = if not hasTest
+                then T.replace (T.pack "-- AUTOGEN-TESTS") (T.pack $ "-- AUTOGEN-TESTS\n    " ++ moduleName ++ ".tests") withImport
+                else withImport
+          TIO.writeFile specPath withTest
+          putStrLn $ "Added " ++ moduleName ++ " to test/Spec.hs"

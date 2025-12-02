@@ -16,6 +16,7 @@ common shared-properties
 library
   import: shared-properties
   exposed-modules: AoC.Template
+                 , Day01
   hs-source-dirs: src
   build-depends: base >=4.17 && <5
                , text
@@ -75,6 +76,14 @@ executable submit
 executable day
   import: shared-properties
   main-is: Day.hs
+  hs-source-dirs: app
+  build-depends: base >=4.17 && <5
+               , advent-of-code-haskell
+               , text
+
+executable test-day
+  import: shared-properties
+  main-is: TestDay.hs
   hs-source-dirs: app
   build-depends: base >=4.17 && <5
                , process
