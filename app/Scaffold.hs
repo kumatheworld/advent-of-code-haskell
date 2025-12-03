@@ -27,6 +27,7 @@ scaffoldDay day = do
   updateCabalFile dayModule
   updateTestSpec dayModule
   updateDayRunner dayModule day
+  updateSubmitRunner dayModule day
 
   putStrLn "\nDownloading input..."
   callCommand $ printf "cabal run download %d" day
@@ -142,6 +143,49 @@ addDayCase content moduleName day =
   T.replace
     (T.pack "runDay day = do")
     (T.pack $ "runDay " ++ show day ++ " = " ++ moduleName ++ ".solution\nrunDay day = do")
+    content
+
+updateSubmitRunner :: String -> Int -> IO ()
+updateSubmitRunner moduleName day = do
+  let submitFile = "app/Submit.hs"
+  exists <- doesFileExist submitFile
+  if not exists
+    then putStrLn $ "Submit runner \"" ++ submitFile ++ "\" not found; skipping registration"
+    else do
+      submitContent <- TIO.readFile submitFile
+      let importLine = T.pack $ "import qualified " ++ moduleName
+          case1 = T.pack $ "runDay " ++ show day ++ " 1 input = return $ " ++ moduleName ++ ".part1 input"
+          case2 = T.pack $ "runDay " ++ show day ++ " 2 input = return $ " ++ moduleName ++ ".part2 input"
+          hasImport = T.isInfixOf importLine submitContent
+          hasCase1 = T.isInfixOf case1 submitContent
+          hasCase2 = T.isInfixOf case2 submitContent
+
+      if hasImport && hasCase1 && hasCase2
+        then putStrLn "Submit runner already up to date"
+        else do
+          let withImport =
+                if not hasImport
+                  then addSubmitImport submitContent moduleName
+                  else submitContent
+              withCases =
+                if not hasCase1 && not hasCase2
+                  then addSubmitCases withImport moduleName day
+                  else withImport
+          TIO.writeFile submitFile withCases
+          putStrLn $ "Added " ++ moduleName ++ " to submit runner"
+
+addSubmitImport :: T.Text -> String -> T.Text
+addSubmitImport content moduleName =
+  T.replace
+    (T.pack "-- AUTOGEN-IMPORTS (scaffold will add day imports here)")
+    (T.pack $ "-- AUTOGEN-IMPORTS (scaffold will add day imports here)\nimport qualified " ++ moduleName)
+    content
+
+addSubmitCases :: T.Text -> String -> Int -> T.Text
+addSubmitCases content moduleName day =
+  T.replace
+    (T.pack "-- AUTOGEN-CASES (scaffold will add day cases here)")
+    (T.pack $ "-- AUTOGEN-CASES (scaffold will add day cases here)\nrunDay " ++ show day ++ " 1 input = return $ " ++ moduleName ++ ".part1 input\nrunDay " ++ show day ++ " 2 input = return $ " ++ moduleName ++ ".part2 input")
     content
 
 updateTestSpec :: String -> IO ()

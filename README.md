@@ -98,18 +98,21 @@ cabal run day 1
 
 ### ➡️ Submit solutions
 
-You can submit solutions automatically using `solveAndSubmit` in your solution:
-
 ```sh
-# Run with --submit flag to auto-submit both parts
-cabal run day 1 -- --submit
+# Automatically compute and submit
+cabal run submit 1 1  # day 1, part 1
+cabal run submit 1 2  # day 1, part 2
+
+# Or provide answer directly
+cabal run submit 1 1 42  # day 1, part 1, answer 42
 ```
 
-Or submit manually:
+When you run `cabal run submit <day> <part>` without an answer, it will:
+1. Read the input file for that day
+2. Run your solution (part1 or part2 function)
+3. Submit the computed answer to Advent of Code
 
-```sh
-cabal run submit 1 1 42  # day part answer
-```
+The scaffold automatically registers each day's solution with the submit command.
 
 ### ➡️ Run all solutions
 
