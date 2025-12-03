@@ -69,9 +69,11 @@ executable submit
   main-is: Submit.hs
   hs-source-dirs: app
   build-depends: base >=4.17 && <5
+               , advent-of-code-haskell
                , bytestring
                , http-conduit
                , case-insensitive
+               , text
 
 executable day
   import: shared-properties
