@@ -68,16 +68,16 @@ createModuleFile path moduleName day = do
                   "tests = describe \"" ++ moduleName ++ "\" $ do",
                   "  it \"solves part 1 with example 1\" $ do",
                   "    input <- readExample day 1",
-                  "    part1 input `shouldBe` Just 0  -- TODO: Replace with expected value",
-                  "  ",
+                  "    part1 input `shouldBe` Just 0 -- TODO: Replace with expected value",
+                  "",
                   "  -- Uncomment to test with additional examples (create files like " ++ printf "%02d" day ++ "-2.txt, " ++ printf "%02d" day ++ "-3.txt, etc.)",
                   "  -- it \"solves part 1 with example 2\" $ do",
                   "  --   input <- readExample day 2",
                   "  --   part1 input `shouldBe` Just 0",
-                  "  ",
+                  "",
                   "  it \"solves part 2 with example 1\" $ do",
                   "    input <- readExample day 1",
-                  "    part2 input `shouldBe` Just 0  -- TODO: Replace with expected value"
+                  "    part2 input `shouldBe` Just 0 -- TODO: Replace with expected value"
                 ]
       TIO.writeFile path content
       putStrLn $ "Created module file \"" ++ path ++ "\""
