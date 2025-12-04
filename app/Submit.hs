@@ -1,6 +1,7 @@
 module Main (main) where
 
 import Control.Exception (catch, SomeException)
+import Control.Monad (unless)
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as LBS
 import qualified Data.CaseInsensitive as CI
@@ -58,17 +59,70 @@ submitSolution day part answer = do
   catch (do
     response <- httpBS request'
     let responseBody = BS.unpack $ getResponseBody response
+        mainText = extractMainText responseBody
 
     if "That's the right answer" `isInfixOf` responseBody
-      then putStrLn "✓ Correct answer!"
+      then putStrLn "[CORRECT] That's the right answer!"
       else if "That's not the right answer" `isInfixOf` responseBody
-        then putStrLn "✗ Wrong answer"
+        then do
+          putStrLn "[WRONG] Wrong answer"
+          unless (null mainText) $ putStrLn $ "  " ++ mainText
         else if "You gave an answer too recently" `isInfixOf` responseBody
-          then putStrLn "⏳ Please wait before submitting again"
+          then do
+            putStrLn "[WAIT] Please wait before submitting again"
+            unless (null mainText) $ putStrLn $ "  " ++ mainText
           else if "Did you already complete it" `isInfixOf` responseBody
-            then putStrLn "Already completed"
+            then putStrLn "[DONE] Already completed"
             else putStrLn $ "Response: " ++ take 200 responseBody
     ) (\e -> do
       let err = show (e :: SomeException)
       die $ "Failed to submit: " ++ err
     )
+
+-- Extract the main message text from the HTML response
+-- The message is in <article><p>...</p></article> tags
+extractMainText :: String -> String
+extractMainText html =
+  maybe "" stripHtmlTags (findBetween "<article>" "</article>" html)
+
+-- Find text between two markers
+findBetween :: String -> String -> String -> Maybe String
+findBetween start end str =
+  case breakOn start str of
+    Nothing -> Nothing
+    Just (_, afterStart) ->
+      let content = drop (length start) afterStart
+      in case breakOn end content of
+           Nothing -> Nothing
+           Just (between, _) -> Just between
+
+-- Find the first occurrence of a substring
+breakOn :: String -> String -> Maybe (String, String)
+breakOn _ [] = Nothing
+breakOn needle haystack@(_:rest)
+  | needle `isPrefixOf` haystack = Just ([], haystack)
+  | otherwise = case breakOn needle rest of
+                  Nothing -> Nothing
+                  Just (before, after) -> Just (head haystack : before, after)
+
+isPrefixOf :: String -> String -> Bool
+isPrefixOf [] _ = True
+isPrefixOf _ [] = False
+isPrefixOf (x:xs) (y:ys) = x == y && isPrefixOf xs ys
+
+-- Simple HTML tag stripper - removes tags and decodes common entities
+stripHtmlTags :: String -> String
+stripHtmlTags = unwords . words . decodeEntities . stripTags
+  where
+    stripTags [] = []
+    stripTags ('<':rest) = ' ' : stripTags (dropWhile (/= '>') rest)
+    stripTags ('>':rest) = ' ' : stripTags rest
+    stripTags (c:rest) = c : stripTags rest
+
+    decodeEntities [] = []
+    decodeEntities ('&':'#':'3':'9':';':rest) = '\'' : decodeEntities rest
+    decodeEntities ('&':'a':'m':'p':';':rest) = '&' : decodeEntities rest
+    decodeEntities ('&':'l':'t':';':rest) = '<' : decodeEntities rest
+    decodeEntities ('&':'g':'t':';':rest) = '>' : decodeEntities rest
+    decodeEntities ('&':'q':'u':'o':'t':';':rest) = '"' : decodeEntities rest
+    decodeEntities (c:rest) = c : decodeEntities rest
