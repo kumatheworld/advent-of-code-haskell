@@ -47,7 +47,7 @@ createModuleFile path moduleName day = do
               unlines
                 [ "module " ++ moduleName ++ " (solution, part1, part2, tests) where",
                   "",
-                  "import AoC.Template (Day(..), readExample, solve)",
+                  "import AoC.Template (Day (..), readExample, solve)",
                   "import qualified Data.Text as T",
                   "import Test.Hspec",
                   "",
