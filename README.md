@@ -67,7 +67,7 @@ cabal run scaffold 1
 
 # output:
 # Created module file "src/Day01.hs"
-# Created empty file "data/examples/01.txt"
+# Created empty file "data/examples/01-1.txt"
 # Cabal file already up to date
 # Spec already up to date
 # Added Day01 to day runner
@@ -76,11 +76,12 @@ cabal run scaffold 1
 # Downloaded input for day 1 to data/inputs/01.txt
 # ---
 # 🎄 Type `cabal run day 1` to run your solution.
+#    Add your example inputs to data/examples/01-1.txt, 01-2.txt, etc.
 ```
 
 This creates:
 - Solution module in `src/Day01.hs`
-- Empty example file in `data/examples/01.txt`
+- Empty example file in `data/examples/01-1.txt`
 - Downloads real input to `data/inputs/01.txt`
 - Updates `advent-of-code-haskell.cabal` to expose the module
 - Auto-registers the new day's tests in `test/Spec.hs` so `cabal test` runs them
@@ -138,7 +139,12 @@ cabal test
 cabal run test 1
 ```
 
-Add tests for each day in `test/` directory. Use `cabal test --test-show-details=direct` for verbose output.
+Tests are defined in each day's module (e.g., `src/Day01.hs`). The template supports multiple example files:
+- `data/examples/01-1.txt` - Example 1 (read with `readExample day 1`)
+- `data/examples/01-2.txt` - Example 2 (read with `readExample day 2`)
+- `data/examples/01-3.txt` - Example 3 (read with `readExample day 3`)
+
+This is useful when a puzzle has multiple examples or different test cases. Use `cabal test --test-show-details=direct` for verbose output.
 
 ### ➡️ Build optimized solutions
 

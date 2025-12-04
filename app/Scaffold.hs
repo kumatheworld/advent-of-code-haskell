@@ -20,7 +20,7 @@ scaffoldDay day = do
   let dayPadded = printf "%02d" day :: String
       dayModule = "Day" ++ dayPadded
       moduleFile = "src/" ++ dayModule ++ ".hs"
-      exampleFile = "data/examples/" ++ dayPadded ++ ".txt"
+      exampleFile = "data/examples/" ++ dayPadded ++ "-1.txt"
 
   createModuleFile moduleFile dayModule day
   createEmptyFile exampleFile
@@ -34,6 +34,7 @@ scaffoldDay day = do
 
   putStrLn "---"
   putStrLn $ "🎄 Type `cabal run day " ++ show day ++ "` to run your solution."
+  putStrLn $ "   Add your example inputs to data/examples/" ++ dayPadded ++ "-1.txt, " ++ dayPadded ++ "-2.txt, etc."
 
 createModuleFile :: FilePath -> String -> Int -> IO ()
 createModuleFile path moduleName day = do
@@ -65,11 +66,17 @@ createModuleFile path moduleName day = do
                   "-- Tests",
                   "tests :: Spec",
                   "tests = describe \"" ++ moduleName ++ "\" $ do",
-                  "  it \"solves part 1 correctly\" $ do",
-                  "    input <- readExample day",
+                  "  it \"solves part 1 with example 1\" $ do",
+                  "    input <- readExample day 1",
                   "    part1 input `shouldBe` Just 0  -- TODO: Replace with expected value",
-                  "  it \"solves part 2 correctly\" $ do",
-                  "    input <- readExample day",
+                  "  ",
+                  "  -- Uncomment to test with additional examples (create files like " ++ printf "%02d" day ++ "-2.txt, " ++ printf "%02d" day ++ "-3.txt, etc.)",
+                  "  -- it \"solves part 1 with example 2\" $ do",
+                  "  --   input <- readExample day 2",
+                  "  --   part1 input `shouldBe` Just 0",
+                  "  ",
+                  "  it \"solves part 2 with example 1\" $ do",
+                  "    input <- readExample day 1",
                   "    part2 input `shouldBe` Just 0  -- TODO: Replace with expected value"
                 ]
       TIO.writeFile path content

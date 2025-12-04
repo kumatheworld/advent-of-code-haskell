@@ -16,8 +16,11 @@ newtype Day = Day Int
 readInput :: Day -> IO T.Text
 readInput (Day n) = TIO.readFile $ printf "data/inputs/%02d.txt" n
 
-readExample :: Day -> IO T.Text
-readExample (Day n) = TIO.readFile $ printf "data/examples/%02d.txt" n
+-- | Read a numbered example file (data/examples/DD-N.txt)
+-- Example: readExample (Day 1) 1 reads "data/examples/01-1.txt"
+--          readExample (Day 1) 2 reads "data/examples/01-2.txt"
+readExample :: Day -> Int -> IO T.Text
+readExample (Day n) exampleNum = TIO.readFile $ printf "data/examples/%02d-%d.txt" n exampleNum
 
 solve :: (Show a) => Day -> (T.Text -> Maybe a) -> (T.Text -> Maybe a) -> IO ()
 solve day part1 part2 = do
