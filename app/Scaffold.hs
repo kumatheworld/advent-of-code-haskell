@@ -161,8 +161,8 @@ updateSubmitRunner moduleName day = do
     else do
       submitContent <- TIO.readFile submitFile
       let importLine = T.pack $ "import qualified " ++ moduleName
-          case1 = T.pack $ "runDay " ++ show day ++ " 1 input = return $ " ++ moduleName ++ ".part1 input"
-          case2 = T.pack $ "runDay " ++ show day ++ " 2 input = return $ " ++ moduleName ++ ".part2 input"
+          case1 = T.pack $ "runDay " ++ show day ++ " 1 = return . " ++ moduleName ++ ".part1"
+          case2 = T.pack $ "runDay " ++ show day ++ " 2 = return . " ++ moduleName ++ ".part2"
           hasImport = T.isInfixOf importLine submitContent
           hasCase1 = T.isInfixOf case1 submitContent
           hasCase2 = T.isInfixOf case2 submitContent
