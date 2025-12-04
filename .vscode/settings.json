@@ -3,7 +3,5 @@
   "[haskell]": {
     "editor.defaultFormatter": "haskell.haskell"
   },
-  "haskell.formattingProvider": "ormolu",
-  "haskell.formatOnSave": true,
-  "haskell.formatting.ormolu.executablePath": "${env:HOME}/.cabal/bin/ormolu"
+  "haskell.formattingProvider": "ormolu"
 }
