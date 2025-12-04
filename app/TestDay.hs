@@ -10,7 +10,7 @@ main = do
   args <- getArgs
   case args of
     [dayStr] -> runDayTests (read dayStr)
-    _ -> die "Usage: cabal run test-day <day>"
+    _ -> die "Usage: cabal run test <day>"
 
 runDayTests :: Int -> IO ()
 runDayTests day = do

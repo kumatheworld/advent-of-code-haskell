@@ -146,11 +146,11 @@ cabal test --test-options='--match /Day01/'
 cabal test --test-options='--match "/Advent of Code Tests/Day01/solves part 1 correctly/"'
 ```
 
-- Using the included Haskell wrapper executable `test-day` (convenience):
+- Using the included Haskell wrapper executable `test` (convenience):
 
 ```sh
 # Runs the tests that match `DayNN` for the given day
-cabal run test-day 1
+cabal run test 1
 ```
 
 The wrapper runs `cabal test --test-options='--match /DayNN/'` for you and avoids manual quoting.
