@@ -192,7 +192,7 @@ addSubmitCases :: T.Text -> String -> Int -> T.Text
 addSubmitCases content moduleName day =
   T.replace
     (T.pack "-- AUTOGEN-CASES (scaffold will add day cases here)")
-    (T.pack $ "-- AUTOGEN-CASES (scaffold will add day cases here)\nrunDay " ++ show day ++ " 1 input = return $ " ++ moduleName ++ ".part1 input\nrunDay " ++ show day ++ " 2 input = return $ " ++ moduleName ++ ".part2 input")
+    (T.pack $ "-- AUTOGEN-CASES (scaffold will add day cases here)\nrunDay " ++ show day ++ " 1 = return . " ++ moduleName ++ ".part1\nrunDay " ++ show day ++ " 2 = return . " ++ moduleName ++ ".part2")
     content
 
 updateTestSpec :: String -> IO ()
