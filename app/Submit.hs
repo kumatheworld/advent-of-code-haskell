@@ -40,7 +40,7 @@ computeAnswer day part = do
 
 runDay :: Int -> Int -> T.Text -> IO (Maybe Int)
 -- AUTOGEN-CASES (scaffold will add day cases here)
-runDay day _ = \_ -> die $ "Day " ++ show day ++ " not yet implemented"
+runDay day _ = const . die $ "Day " ++ show day ++ " not yet implemented"
 
 submitSolution :: Int -> Int -> String -> IO ()
 submitSolution day part answer = do
